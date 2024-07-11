@@ -1,0 +1,41 @@
+<div class="profile-body my-5">
+    <div class="profile-container mt-3">
+        <form action="?action=confirm-edit-profile&isLogin&user_id=<?php echo $_REQUEST["user_id"]?>" method="POST" enctype="multipart/form-data">
+            <div class="profile-header">
+                <img src="../css/<?php echo $author->image_path; ?>" alt="profile not found" class="profile-pic">
+                <div class="p-2">
+                    <label for="formFile" class="form-label">Picture</label>
+                    <input class="form-control" type="file" name="updated-pic">
+                </div>
+                <div class="p-2 form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" class="form-control" name="fullname" value="<?php echo $author->fullname; ?>">
+                </div>
+                <div class="p-2 form-group">
+                    <label for="bio">Bio</label>
+                    <textarea class="form-control" name="bio" rows="3"><?php echo $author->bio; ?></textarea>
+                </div>
+            </div>
+
+            <div class="profile-interests">
+                <h2>Interests</h2>
+                <ul>
+                    <?php
+                    foreach ($author->interests as $interest) {
+                        echo "
+                                <li>
+                                    <input type='text' class='form-control mb-2' name='interests[]' value='" . $interest . "'>
+                                </li>
+                            ";
+                    }
+                    ?>
+                    <li>
+                        <input type="text" class="form-control mb-2" name="interests[]" placeholder="Add new interest">
+                    </li>
+                </ul>
+            </div>
+            <a class="btn btn-secondary btn-block mb-3 mx-2" href="?action=cancel-edit-profile&isLogin&user_id=<?php echo $_REQUEST["user_id"]?>">Cancel</a>
+            <button type="submit" class="btn btn-success btn-block mb-3">Update Profile</button>
+        </form>
+    </div>
+</div>

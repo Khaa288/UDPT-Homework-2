@@ -1,0 +1,73 @@
+<?php
+foreach ($topics as $item) {
+  echo "<div class='p-4'>";
+  echo "  <div class='card'>";
+  echo "    <div class='card-header'>Top 5: ".($item->topic_name)."</div>";
+  echo "      <div class='card-body'>";
+
+  foreach ($item->papers as $paper) {
+    echo "
+    <div class='row paper-card rounded p-2'>
+      <div class='col-10'>
+        <h5 class='text-bold'>Title: " . ($paper->title) . "</h5>
+        <p>Authors - " . ($paper->author_string_list) . "</p>
+      </div>
+      <div class='col-2 text-end pt-3'> 
+        <button class='btn border-0' data-bs-toggle='modal' data-bs-target='#exampleModal'>
+          <i class='bi bi-chevron-right'></i>
+        </button>
+      </div>
+    </div>
+    <hr/>
+    ";
+  }
+
+  echo "    </div>";
+  echo "    </div>";
+  echo "  </div>";
+  echo "</div>";
+}
+?>
+
+<!-- Paper Detail -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Paper Detail</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="paperTitle" class="form-label fw-bold"><strong>Title:</strong></label>
+          <p id="paperTitle" class="form-control-plaintext">Paper Title Here</p>
+        </div>
+        <div class="mb-3">
+          <label for="paperAuthors" class="form-label fw-bold"><strong>Authors:</strong></label>
+          <p id="paperAuthors" class="form-control-plaintext">Author 1, Author 2, Author 3</p>
+        </div>
+        <div class="mb-3">
+          <label for="paperAbstract" class="form-label fw-bold"><strong>Abstract:</strong></label>
+          <p id="paperAbstract" class="form-control-plaintext">This is the abstract of the paper. It provides an overview of the content and findings of the paper.</p>
+        </div>
+        <div class="mb-3">
+          <label for="conferenceName" class="form-label fw-bold"><strong>Conference Name:</strong></label>
+          <p id="conferenceName" class="form-control-plaintext">Conference Name Here</p>
+        </div>
+        <div class="mb-3">
+          <label for="topicName" class="form-label fw-bold"><strong>Topic:</strong></label>
+          <p id="topicName" class="form-control-plaintext">Topic Name Here</p>
+        </div>
+        <div class="mb-3">
+          <label for="userName" class="form-label fw-bold"><strong>Submitted by:</strong></label>
+          <p id="userName" class="form-control-plaintext">User Name Here</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+

@@ -1,0 +1,118 @@
+<div class="row">
+    <div class="col-4">
+        <div class="profile-body">
+            <div class="profile-container">
+                <div class="profile-header">
+                    <?php
+                    echo "<img src= '../css" . $author->image_path . "' alt= 'profile not found' class='profile-pic'>";
+                    echo "
+                    <h1 class='profile-name'>" . $author->fullname . "</h1>
+                    <p class='profile-bio'>" . $author->bio . "</p>";
+                    
+                    echo "
+                        <a 
+                            class='btn btn-light btn-sm rounded px-4 mt-2' 
+                            href='?action=edit-profile&isLogin&user_id=".$user->user_id."'
+                        >
+                            Edit profile
+                        </a>
+                    ";
+                    ?>
+                </div>
+
+                <div class="profile-interests">
+                    <h2>Interests</h2>
+                    <ul>
+                        <?php
+                        foreach ($author->interests as $interest) {
+                            echo "<li>" . $interest . "</li>";
+                        }
+                        ?>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-8">
+        <div class="container py-4 pe-5">
+            <div class="row">
+                <div class="col-6">
+                  <h1>List of papers</h1>
+                </div>
+                <div class="col-6 text-end mt-2">
+                  <a class="btn btn-secondary" href="?action=create-paper">
+                    <i class="bi bi-plus"></i>
+                    Add new paper 
+                  </a>
+                </div>
+            </div>
+            <?php
+            foreach ($papers as $paper) {
+                echo "<div class='card mt-4'>"; 
+                echo "  <div class='card-body row'>";
+                echo "
+                    <div class='col-10'>
+                        <h5 class='card-title pb-2'>
+                            " . $paper->title . "
+                        </h5>
+                        <p class='card-text'><strong>Author: </strong>" . $paper->author_string_list . "</p>
+                        <p class='card-text'><strong>Topic: </strong>" . $paper->topic_name . "</p>
+                    </div>
+                    <div class='col-2 text-end pt-4'> 
+                        <button class='btn border-0' data-bs-toggle='modal' data-bs-target='#paper-detail-modal'>
+                            <i class='bi bi-chevron-right'></i>
+                        </button>
+                    </div>
+                    ";
+                echo "  </div>";
+                echo "</div>";
+            }
+            ?>
+        </div>
+    </div>
+</div>
+
+
+<!-- Paper Detail -->
+<div class="modal fade" id="paper-detail-modal" tabindex="-1" aria-labelledby="paper-detail-modal" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="paper-detail-modal">Paper Detail</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="paperTitle" class="form-label fw-bold"><strong>Title:</strong></label>
+          <p id="paperTitle" class="form-control-plaintext"><?php echo $paper->title ?></p>
+        </div>
+        <div class="mb-3">
+          <label for="paperAuthors" class="form-label fw-bold"><strong>Authors:</strong></label>
+          <p id="paperAuthors" class="form-control-plaintext"><?php echo $paper->author_string_list ?></p>
+        </div>
+        <div class="mb-3">
+          <label for="paperAbstract" class="form-label fw-bold"><strong>Abstract:</strong></label>
+          <p id="paperAbstract" class="form-control-plaintext"><?php echo $paper->abstract ?></p>
+        </div>
+        <div class="mb-3">
+          <label for="conferenceName" class="form-label fw-bold"><strong>Conference Name:</strong></label>
+          <p id="conferenceName" class="form-control-plaintext"><?php echo $paper->conference_name ?></p>
+        </div>
+        <div class="mb-3">
+          <label for="topicName" class="form-label fw-bold"><strong>Topic:</strong></label>
+          <p id="topicName" class="form-control-plaintext"><?php echo $paper->topic_name ?></p>
+        </div>
+        <div class="mb-3">
+          <label for="userName" class="form-label fw-bold"><strong>Submitted by:</strong></label>
+          <p id="userName" class="form-control-plaintext"><?php echo $paper->publisher ?></p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Assign myself</button>
+      </div>
+    </div>
+  </div>
+</div>
+
