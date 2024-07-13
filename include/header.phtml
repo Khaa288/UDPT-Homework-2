@@ -4,7 +4,7 @@
         <nav>
             <ul class="nav-links">                
                 <?php
-                    if (isset($_COOKIE["isLogin"])) {
+                    if (isset($_SESSION["isLogin"])) {
                         echo "<li><a href='index.php?action=home'>Home</a></li>";
                         echo "<li><a href='index.php?action=search'>Search</a></li>";
                         echo "<li><a href='index.php?action=logout'>Logout</a></li>";

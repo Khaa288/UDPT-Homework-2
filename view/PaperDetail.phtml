@@ -41,7 +41,7 @@
             <div class="d-flex justify-content-between">
                 <a class="btn btn-secondary" href="?action=home">Back</a>
                 <form action="?action=assign-self" method="post">
-                    <input id="user_id" name="user_id" value="<?php echo $_COOKIE["isLogin"] ?>" hidden>
+                    <input id="user_id" name="user_id" value="<?php echo $_SESSION["isLogin"] ?>" hidden>
                     <input id="paper_id" name="paper_id" value="<?php echo $paper_id ?>" hidden>
                     <input id="author_string_list" name="author_string_list" value="<?php echo $paper->author_string_list ?>" hidden>
                     <button type="submit" class="btn btn-primary">Assign myself</button>

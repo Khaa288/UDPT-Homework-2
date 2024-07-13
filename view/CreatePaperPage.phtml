@@ -196,7 +196,7 @@
                     <input type="text" hidden name="topic_name" id="topicInput">
                     <input type="text" hidden name="authorsName" id="authorsNameInput">
                     <input type="text" hidden name="authorsRole" id="authorsRoleInput">
-                    <input type="text" hidden name="publisher" value="<?php echo $_COOKIE["isLogin"]?>">
+                    <input type="text" hidden name="publisher" value="<?php echo $_SESSION["isLogin"]?>">
                     <button type="submit" class="btn btn-primary" onclick="handleSubmit()">Submit</button>
                 </form>
             </div>

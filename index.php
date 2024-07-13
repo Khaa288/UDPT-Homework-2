@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("./controller/PublicController.php");
 require_once("./controller/PapersController.php");
 require_once("./controller/LoginController.php");

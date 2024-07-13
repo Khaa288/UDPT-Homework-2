@@ -11,7 +11,7 @@ class PublicController
 
     public function home() 
     {
-        $author = AuthorsModel::GetAuthor($_COOKIE["isLogin"]);
+        $author = AuthorsModel::GetAuthor($_SESSION["isLogin"]);
         $papers = PapersModel::GetAllPapers();
 
         $VIEW = "./view/HomePage.phtml";

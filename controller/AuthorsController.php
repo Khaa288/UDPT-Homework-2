@@ -4,8 +4,8 @@ class AuthorsController
 {
     public function editProfile()
     {
-        if (isset($_COOKIE["isLogin"])) {
-            $author = AuthorsModel::GetAuthor($_COOKIE["isLogin"]);
+        if (isset($_SESSION["isLogin"])) {
+            $author = AuthorsModel::GetAuthor($_SESSION["isLogin"]);
 
             $VIEW = "./view/ProfileEdit.phtml";
             require("./template/layout.phtml");
@@ -14,7 +14,7 @@ class AuthorsController
 
     public function confirmEditProfile()
     {
-        $user_id = $_COOKIE["isLogin"];
+        $user_id = $_SESSION["isLogin"];
         $fullname = $_REQUEST["fullname"];
         $bio = $_REQUEST["bio"];
         $interests = $_REQUEST["interests"];
