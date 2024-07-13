@@ -12,7 +12,7 @@
                     echo "
                         <a 
                             class='btn btn-light btn-sm rounded px-4 mt-2' 
-                            href='?action=edit-profile&isLogin&user_id=".$user->user_id."'
+                            href='?action=edit-profile'
                         >
                             Edit profile
                         </a>
@@ -60,9 +60,9 @@
                         <p class='card-text'><strong>Topic: </strong>" . $paper->topic_name . "</p>
                     </div>
                     <div class='col-2 text-end pt-4'> 
-                        <button class='btn border-0' data-bs-toggle='modal' data-bs-target='#paper-detail-modal'>
+                        <a class='btn border-0' href='?action=paper-detail&paper_id=".$paper->paper_id."'>
                             <i class='bi bi-chevron-right'></i>
-                        </button>
+                        </a>
                     </div>
                     ";
                 echo "  </div>";
@@ -72,47 +72,3 @@
         </div>
     </div>
 </div>
-
-
-<!-- Paper Detail -->
-<div class="modal fade" id="paper-detail-modal" tabindex="-1" aria-labelledby="paper-detail-modal" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h1 class="modal-title fs-5" id="paper-detail-modal">Paper Detail</h1>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="mb-3">
-          <label for="paperTitle" class="form-label fw-bold"><strong>Title:</strong></label>
-          <p id="paperTitle" class="form-control-plaintext"><?php echo $paper->title ?></p>
-        </div>
-        <div class="mb-3">
-          <label for="paperAuthors" class="form-label fw-bold"><strong>Authors:</strong></label>
-          <p id="paperAuthors" class="form-control-plaintext"><?php echo $paper->author_string_list ?></p>
-        </div>
-        <div class="mb-3">
-          <label for="paperAbstract" class="form-label fw-bold"><strong>Abstract:</strong></label>
-          <p id="paperAbstract" class="form-control-plaintext"><?php echo $paper->abstract ?></p>
-        </div>
-        <div class="mb-3">
-          <label for="conferenceName" class="form-label fw-bold"><strong>Conference Name:</strong></label>
-          <p id="conferenceName" class="form-control-plaintext"><?php echo $paper->conference_name ?></p>
-        </div>
-        <div class="mb-3">
-          <label for="topicName" class="form-label fw-bold"><strong>Topic:</strong></label>
-          <p id="topicName" class="form-control-plaintext"><?php echo $paper->topic_name ?></p>
-        </div>
-        <div class="mb-3">
-          <label for="userName" class="form-label fw-bold"><strong>Submitted by:</strong></label>
-          <p id="userName" class="form-control-plaintext"><?php echo $paper->publisher ?></p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Assign myself</button>
-      </div>
-    </div>
-  </div>
-</div>
-

@@ -20,11 +20,15 @@ switch ($action)
         $controller = new LoginController();
         $controller->logout();
         break;
+    case "home":      
+        $controller = new PublicController();
+        $controller->home();
+        break;
     case "list-papers":      
         $controller = new PapersController();
         $controller->list();
         break;
-    case "list-papers/get":
+    case "paper-detail":      
         $controller = new PapersController();
         $controller->get();
         break;
@@ -36,13 +40,17 @@ switch ($action)
         $controller = new AuthorsController();
         $controller->confirmEditProfile();
         break;
-    case "cancel-edit-profile": 
-        $controller = new AuthorsController();
-        $controller->cancelEditProfile();
-        break;
     case "create-paper": 
         $controller = new PapersController();
         $controller->create();
+        break;
+    case "confirm-create-paper": 
+        $controller = new PapersController();
+        $controller->confirmCreate();
+        break;
+    case "assign-self": 
+        $controller = new PapersController();
+        $controller->assign();
         break;
     case "search": 
         $controller = new PapersController();

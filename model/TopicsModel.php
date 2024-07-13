@@ -53,5 +53,26 @@ class TopicsModel
         $mysqli->close();
         return $topics_list;
     }
+
+    public static function GetAllTopics()
+    {
+        $mysqli = connect();
+        $mysqli->query("SET NAMES utf8");
+        $query = "SELECT * from topics";
+
+        $result = $mysqli->query($query);
+        $topics_list = array();
+
+        if ($result) {
+            foreach ($result as $row) {
+                $t = new TopicsModel();
+                $t->topic_name = $row["topic_name"];
+                $t->topic_id = $row["topic_id"];
+                $topics_list[] = $t;
+            }
+        }
+        $mysqli->close();
+        return $topics_list;
+    }
 }
 ?>

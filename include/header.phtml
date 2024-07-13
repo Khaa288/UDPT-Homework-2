@@ -4,16 +4,15 @@
         <nav>
             <ul class="nav-links">                
                 <?php
-                    if (isset($_REQUEST["isLogin"])) {
-                        echo "<li><a href='index.php?action=login&isLogin'>Home</a></li>";
-                        echo "<li><a href='index.php?action=search&isLogin'>Search</a></li>";
+                    if (isset($_COOKIE["isLogin"])) {
+                        echo "<li><a href='index.php?action=home'>Home</a></li>";
+                        echo "<li><a href='index.php?action=search'>Search</a></li>";
                         echo "<li><a href='index.php?action=logout'>Logout</a></li>";
                     }
                     else {
                         echo "<li><a href='index.php?action=login'>Login</a></li>";
                     }
                 ?>
-                
             </ul>
         </nav>
     </div>

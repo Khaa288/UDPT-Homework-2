@@ -1,8 +1,52 @@
-<?php
-    print($paper->title."<br>");
-    print($paper->author_string_list."<br>");
-    print($paper->abstract."<br>");
-    print($paper->conference_name."<br>");
-    print($paper->topic_name."<br>");
-    print($paper->publiser."<br>");
-?>
+<div class="container py-5">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="mfs-5" id="paper-detail-modal">Paper Detail</h1>
+        </div>
+
+        <div class="card-body">
+            <div class="mb-3">
+                <label for="paperTitle" class="form-label fw-bold"><strong>Title:</strong></label>
+                <p id="paperTitle" class="form-control-plaintext"><?php echo $paper->title ?></p>
+            </div>
+            <div class="mb-3">
+                <label for="paperAuthors" class="form-label fw-bold"><strong>Authors:</strong></label>
+                <?php
+                    foreach($paper_participants as $participant) {
+                        echo 
+                        "<p class='form-control-plaintext'>  
+                            <strong>Add in: ".$participant->date_added."</strong> - "
+                            .$participant->author_name." (".$participant->role.")
+                        </p>";
+                    }
+                ?>
+            </div>
+            <div class="mb-3">
+                <label for="paperAbstract" class="form-label fw-bold"><strong>Abstract:</strong></label>
+                <p id="paperAbstract" class="form-control-plaintext"><?php echo $paper->abstract ?></p>
+            </div>
+            <div class="mb-3">
+                <label for="conferenceName" class="form-label fw-bold"><strong>Conference Name:</strong></label>
+                <p id="conferenceName" class="form-control-plaintext"><?php echo $paper->conference_name ?></p>
+            </div>
+            <div class="mb-3">
+                <label for="topicName" class="form-label fw-bold"><strong>Topic:</strong></label>
+                <p id="topicName" class="form-control-plaintext"><?php echo $paper->topic_name ?></p>
+            </div>
+            <div class="mb-3">
+                <label for="userName" class="form-label fw-bold"><strong>Submitted by:</strong></label>
+                <p id="userName" class="form-control-plaintext"><?php echo $paper->publisher ?></p>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-secondary" href="?action=home">Back</a>
+                <form action="?action=assign-self" method="post">
+                    <input id="user_id" name="user_id" value="<?php echo $_COOKIE["isLogin"] ?>" hidden>
+                    <input id="paper_id" name="paper_id" value="<?php echo $paper_id ?>" hidden>
+                    <input id="author_string_list" name="author_string_list" value="<?php echo $paper->author_string_list ?>" hidden>
+                    <button type="submit" class="btn btn-primary">Assign myself</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

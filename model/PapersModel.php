@@ -25,7 +25,7 @@ class PapersModel
         $mysqli->query("SET NAMES utf8");
         $query = 
         "
-            SELECT title, author_string_list, abstract, c.name, t.topic_name, u.username
+            SELECT paper_id, title, author_string_list, abstract, c.name, t.topic_name, u.username
             FROM papers p 
                 JOIN conferences c ON p.conference_id = c.conference_id 
                 JOIN users u ON p.user_id = u.user_id 
@@ -45,6 +45,7 @@ class PapersModel
                 $pp->conference_name = $row["name"];
                 $pp->abstract = $row["abstract"];
                 $pp->publisher = $row["username"];
+                $pp->paper_id = $row["paper_id"];
                 
                 $papers_list[] = $pp;
             }
@@ -53,7 +54,7 @@ class PapersModel
         return $papers_list;
     }
     
-    public static function GetPaperById($paper_id) {
+    public static function GetPaper($paper_id) {
         $mysqli = connect();
         $mysqli->query("SET NAMES utf8");
         $query = "
@@ -62,8 +63,7 @@ class PapersModel
                     JOIN conferences c ON p.conference_id = c.conference_id 
                     JOIN users u ON p.user_id = u.user_id 
                     JOIN topics t ON p.topic_id = t.topic_id
-                WHERE p.paper_id = 
-                ".$paper_id;
+                WHERE p.paper_id = ".$paper_id;
         $result = $mysqli->query($query);
 
         if ($result) 
@@ -82,7 +82,67 @@ class PapersModel
         return $pp;
     }
 
-    public static function searchPaper($value, $searchBy) {
+    public static function GetLatestPaper() {
+        $mysqli = connect();
+        $mysqli->query("SET NAMES utf8");
+        $query = "SELECT * from papers ORDER BY paper_id DESC LIMIT 1"; 
+        $result = $mysqli->query($query);
+
+        if ($result) 
+        {            
+            foreach ($result as $row) {
+                $pp = new PapersModel();
+                $pp->paper_id = $row["paper_id"];
+            }
+        }
+        $mysqli->close();
+        return $pp;
+    }
+
+    public static function GetPaperParticipants($paper_id) {
+        $mysqli = connect();
+        $mysqli->query("SET NAMES utf8");
+        $query = "
+                SELECT role, date_added, a.full_name
+                FROM participation p JOIN authors a ON p.author_id = a.user_id
+                WHERE p.paper_id = ".$paper_id;
+        $result = $mysqli->query($query);
+
+        $participants = array();
+
+        if ($result) 
+        {            
+            foreach ($result as $row) {
+                $p = new ParticipantsModel();
+                $p->author_name = $row["full_name"];
+                $p->role = $row["role"]; 
+                $p->date_added = $row["date_added"];
+
+                $participants[] = $p;
+            }
+        }
+        $mysqli->close();
+        return $participants;
+    }
+
+    public static function CountPapers() {
+        $mysqli = connect();
+        $mysqli->query("SET NAMES utf8");
+        $query = "SELECT count(*) as rowsNum from papers";
+        $result = $mysqli->query($query);
+
+        if ($result) 
+        {            
+            foreach ($result as $row) {
+                $count = $row["rowsNum"];
+            }
+        }
+        
+        $mysqli->close();
+        return $count;
+    }
+
+    public static function SearchPaper($value, $searchBy, $offset, $rowsPerPage) {
         $condition = "WHERE ".$searchBy." LIKE '%$value%' ";
 
         $mysqli = connect();
@@ -90,12 +150,12 @@ class PapersModel
         
         $query = 
         "
-            SELECT title, author_string_list, abstract, c.name, t.topic_name, u.username
+            SELECT paper_id, title, author_string_list, abstract, c.name, t.topic_name, u.username
             FROM papers p 
                 JOIN conferences c ON p.conference_id = c.conference_id 
                 JOIN users u ON p.user_id = u.user_id 
                 JOIN topics t ON p.topic_id = t.topic_id    
-        ".$condition;
+        ".$condition." LIMIT ".$offset.", ".$rowsPerPage;
 
         $response = 
         "
@@ -108,6 +168,7 @@ class PapersModel
                 <th>Conference Name</th>
                 <th>Topic Name</th>
                 <th>Publisher</th>
+                <th>Detail</th>
             </tr>
         </thead>
         <tbody>
@@ -124,7 +185,8 @@ class PapersModel
                 $abstract = $row["abstract"];
                 $conference_name = $row["name"];
                 $topic_name = $row["topic_name"];
-                $publisher = $row["username"];  
+                $publisher = $row["username"]; 
+                $paper_id = $row["paper_id"];
                 
                 $response = $response."
                     <tr>
@@ -135,6 +197,11 @@ class PapersModel
                         <td>".$conference_name."</td>
                         <td>".$topic_name."</td>
                         <td>".$publisher."</td>
+                        <td>
+                            <a class='btn border-0' href='?action=paper-detail&paper_id=".$paper_id."'>
+                                <i class='bi bi-chevron-right'></i>
+                            </a>
+                        </td>
                     </tr>
                 ";
 
@@ -145,6 +212,57 @@ class PapersModel
 
         $response = $response."</tbody>";
         return $response;
+    }
+
+    public static function AssignPaper($paper_id, $author_id, $author_string_list) {
+        $mysqli = connect();
+        $mysqli->query("SET NAMES utf8");
+        $update_query = 
+        "
+            UPDATE papers 
+            SET author_string_list = '".$author_string_list."'
+            WHERE paper_id = 
+        ".$paper_id;
+        $update_result = $mysqli->query($update_query);
+
+        $insert_query = 
+        "
+            INSERT INTO participation VALUES (
+                ".$author_id.", 
+                ".$paper_id.", 
+                'member', 
+                '".date("Y-m-d H:i:s")."', 
+                'show'
+            )
+        ";
+        $insert_result = $mysqli->query($insert_query);
+
+        $mysqli->close();
+        if ($update_result && $insert_result) 
+        {            
+            return true;
+        }
+        
+        return false;
+    }
+
+    public static function CreatePaper($title, $author_string_list, $abstract, $conference_id, $topic_id, $user_id) {
+        $mysqli = connect();
+        $mysqli->query("SET NAMES utf8");
+        $query = "
+            INSERT INTO papers (title, author_string_list, abstract, conference_id, topic_id, user_id)
+            VALUES(
+                '".$title."',
+                '".$author_string_list."',
+                '".$abstract."',
+                ".$conference_id.",
+                ".$topic_id.",
+                ".$user_id."
+            )
+        ";
+        $result = $mysqli->query($query);
+        $mysqli->close();
+        return $result;
     }
 }
 ?>

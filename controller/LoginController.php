@@ -12,7 +12,8 @@ class LoginController {
             $user = UsersModel::GetUser($username, $password);
 
             if ($user) {
-                $user = UsersModel::GetUser($username, $password);
+                setcookie("isLogin", $user->user_id);
+
                 $author = AuthorsModel::GetAuthor($user->user_id);
                 $papers = PapersModel::GetAllPapers();
 
@@ -41,6 +42,7 @@ class LoginController {
 
     public function logout () 
     {
+        unset($_COOKIE["isLogin"]);
         header("Location: index.php?action=login");
     }
 }

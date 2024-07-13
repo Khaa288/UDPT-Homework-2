@@ -10,15 +10,27 @@
         }
     }
 
-    function searchPapers() {
+    function searchPapers(offset, rowsPerPage) {
         const searchValue = document.getElementById('search').value;
         const searchByValue = document.getElementById('searchBy').value;
-
+        
         xmlHttp = CreateXMLHttpRequest();
         xmlHttp.onreadystatechange = showResult;
+        setPaginationColor();
 
-        xmlHttp.open('GET', `index.php?action=ajax-search&value=${searchValue}&searchBy=${searchByValue}`, true);
+        xmlHttp.open('GET', `index.php?action=ajax-search&value=${searchValue}&searchBy=${searchByValue}&offset=${offset}&rowsPerPage=${rowsPerPage}`, true);
         xmlHttp.send(null);
+    }
+
+    function setPaginationColor() {
+        const paginBtns = document.querySelectorAll('.pagination button');
+
+        paginBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelector('.pagination button.active').classList.remove('active');
+                this.classList.add('active');
+            });
+        })
     }
 
     function showResult()
@@ -49,51 +61,28 @@
     <form>
         <div class="search-form-group">
             <label for="search">Search:</label>
-            <input type="text" id="search" placeholder="Enter search term" onkeyup="searchPapers()">
+            <input type="text" id="search" placeholder="Enter search term" onkeyup="searchPapers(0,5)">
         </div>
-        <button type="button" class="search-btn" onclick="searchPapers()">Search</button>
+        <button type="button" class="search-btn" onclick="searchPapers(0, 5)">Search</button>
     </form>
 
     <table id="papersTable" class="search-table">
-        <thead>
-            <tr>
-                <th>Paper ID</th>
-                <th>Title</th>
-                <th>Authors</th>
-                <th>Abstract</th>
-                <th>Conference ID</th>
-                <th>Topic ID</th>
-                <th>User ID</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>Advancements in Artificial Intelligence</td>
-                <td>John Smith, Jane Doe</td>
-                <td>An in-depth study on recent advancements in AI.</td>
-                <td>1</td>
-                <td>1</td>
-                <td>1</td>
-            </tr>
-            <tr>
-                <td>2</td>
-                <td>Data Science Applications in Healthcare</td>
-                <td>Michael Brown, Emily Davis, David Harris</td>
-                <td>Exploring the impact of data science in healthcare.</td>
-                <td>2</td>
-                <td>2</td>
-                <td>3</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>Machine Learning Algorithms for Big Data</td>
-                <td>Sarah Martin, James Lee</td>
-                <td>A comprehensive review of ML algorithms for big data.</td>
-                <td>3</td>
-                <td>3</td>
-                <td>6</td>
-            </tr>
-        </tbody>
+        
     </table>
+
+    <div class="pagination">
+        <?php
+            $page_size = 5;
+            $max_page = ceil($papers_count / $page_size);
+
+            echo "<button onclick='searchPapers(0, ".$page_size.")' class='active'>1</button>";
+
+            for($i = 1; $i < $max_page; $i++) {
+                $page_num = $i + 1;
+                $offet = ($page_num - 1) * 3;
+                
+                echo "<button onclick='searchPapers(".$offet.", ".$page_size.")'>".$page_num."</button>";
+            }
+        ?>
+    </div>
 </div>

@@ -1,6 +1,6 @@
 <div class="profile-body my-5">
     <div class="profile-container mt-3">
-        <form action="?action=confirm-edit-profile&isLogin&user_id=<?php echo $_REQUEST["user_id"]?>" method="POST" enctype="multipart/form-data">
+        <form action="?action=confirm-edit-profile" method="POST" enctype="multipart/form-data">
             <div class="profile-header">
                 <img src="../css/<?php echo $author->image_path; ?>" alt="profile not found" class="profile-pic">
                 <div class="p-2">
@@ -34,7 +34,7 @@
                     </li>
                 </ul>
             </div>
-            <a class="btn btn-secondary btn-block mb-3 mx-2" href="?action=cancel-edit-profile&isLogin&user_id=<?php echo $_REQUEST["user_id"]?>">Cancel</a>
+            <a class="btn btn-secondary btn-block mb-3 mx-2" href="?action=home">Cancel</a>
             <button type="submit" class="btn btn-success btn-block mb-3">Update Profile</button>
         </form>
     </div>

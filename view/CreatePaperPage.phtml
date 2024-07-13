@@ -1,1 +1,209 @@
-<h1>Create paper</h1>
+<script>
+    function appendAuthor() {
+        const dropdownValue = document.getElementById('authorDropdownButton').innerText;
+
+        // When dropdown does not have value
+        if (dropdownValue.includes('Author list')) {
+            return;
+        }
+
+        const container = document.getElementById('adding-author-list');
+        const items = container.querySelectorAll('li');
+
+        // check if author is added or not
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].innerText.includes(dropdownValue)) {
+                return;
+            }
+        }
+
+        let role = '';
+        if (items.length === 0) {
+            role = 'first_author';
+        } else {
+            role = 'member';
+        }
+
+        const li = document.createElement('li');
+        const p = document.createElement('p');
+        p.textContent = `${role}: ${dropdownValue} added`;
+        li.appendChild(p);
+        container.appendChild(li);
+
+        // Add to form input also
+        let authorsInput = document.getElementById('authorsNameInput');
+        authorsInput.value += `${dropdownValue}, `;
+        
+        let authorsRoleInput = document.getElementById('authorsRoleInput');
+        authorsRoleInput.value += `${role}, `;
+    }
+    
+    // Handle Form Submit
+    function handleSubmit() {
+        let createPaperform = document.getElementById("create-paper");
+
+        createPaperform.addEventListener("submit", (e) => {
+            let title = document.getElementById("titleInput").value;
+            let abstract = document.getElementById("abstractInput").value;
+            let authors = document.getElementById("authorsInput").value;
+            let topicName = document.getElementById("topicInput").value;
+            let conferenceName = document.getElementById("conferenceInput").value;
+
+            if (
+                title == '' ||
+                abstract == '' ||
+                authors == '' ||
+                topicName == '' ||
+                conferenceName == ''
+            ) {
+                e.preventDefault();
+                document.getElementById("error").innerText = "(*) Some fields are missing";
+            }
+        });
+    }
+
+    // Handle dropdown changes 
+    document.addEventListener('DOMContentLoaded', function() {
+        const authorItems = document.querySelectorAll('#authors .dropdown-item');
+        const authorDropdownButton = document.getElementById('authorDropdownButton');
+
+        authorItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                authorDropdownButton.textContent = this.textContent;
+            });
+        });
+
+        const conferenceItems = document.querySelectorAll('#conferences .dropdown-item');
+        const conferenceDropdownButton = document.getElementById('conferenceDropdownButton');
+
+        conferenceItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                conferenceDropdownButton.textContent = this.textContent;
+                document.getElementById('conferenceInput').value = this.id;
+            });
+        });
+
+        const topicItems = document.querySelectorAll('#topics .dropdown-item');
+        const topicDropdownButton = document.getElementById('topicDropdownButton');
+
+        topicItems.forEach(function(item) {
+            item.addEventListener('click', function() {
+                topicDropdownButton.textContent = this.textContent;
+                document.getElementById('topicInput').value = this.id;
+            });
+        });
+    });
+
+    // Handle text input changes
+    document.addEventListener('DOMContentLoaded', function() {
+        const titleInput = document.getElementById('paperTitle');
+        const abstractInput = document.getElementById('paperAbstracts');
+
+        titleInput.addEventListener('change', function() {
+            document.getElementById('titleInput').value = this.value;
+        });
+        abstractInput.addEventListener('change', function(event) {
+            document.getElementById('abstractInput').value = this.value;
+        });
+    });
+</script>
+
+<div class="container py-5 my-5">
+    <div class="card">
+        <div class="card-header">
+            <h1 class="mfs-5" id="paper-detail-modal">Add new paper</h1>
+        </div>
+        <div class="card-body">
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label for="paperTitle" class="form-label fw-bold"><strong>Title:</strong></label>
+                        <input type="text" class="form-control" placeholder="Enter paper title" id="paperTitle" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="paperAuthors" class="form-label fw-bold"><strong>Authors:</strong></label>
+                        <div class="row" id="paperAuthors">
+                            <div class="col-10">
+                                <div class="dropdown">
+                                    <button id="authorDropdownButton" class="btn btn-light border border-secondary dropdown-toggle form-control" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <div class="current-author-id" hidden></div>
+                                        Author list
+                                    </button>
+                                    <ul id="authors" class="dropdown-menu">
+                                        <?php
+                                        foreach ($authors as $author) {
+                                            echo "<li><button class='dropdown-item'>" . $author->fullname . "</button></li>";
+                                        }
+                                        ?>
+                                    </ul>
+                                </div>
+                                <ul id="adding-author-list" class="pt-2"></ul>
+                            </div>
+                            <div class="col-2">
+                                <button class="btn" onclick="appendAuthor()">
+                                    <i class="bi bi-plus-circle-fill"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="paperAbstract" class="form-label fw-bold"><strong>Abstract:</strong></label>
+                        <input type="text" class="form-control" placeholder="Enter paper abstract" id="paperAbstracts" required>
+                    </div>
+                </div>
+
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label for="conferenceName" class="form-label fw-bold"><strong>Conference Name:</strong></label>
+                        <div class="dropdown">
+                            <button id="conferenceDropdownButton" class="btn btn-light border border-secondary dropdown-toggle form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Conference
+                            </button>
+                            <ul id="conferences" class="dropdown-menu">
+                                <?php
+                                foreach ($conferences as $conference) {
+                                    echo "<li><button class='dropdown-item' id='".$conference->conference_id."'>" . $conference->abbreviation . "</button></li>";
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="topicName" class="form-label fw-bold"><strong>Topic:</strong></label>
+                        <div class="dropdown">
+                            <button id="topicDropdownButton" class="btn btn-light border border-secondary dropdown-toggle form-control" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Topic name
+                            </button>
+                            <ul id="topics" class="dropdown-menu">
+                                <?php
+                                foreach ($topics as $topic) {
+                                    echo "<li><button class='dropdown-item' id='".$topic->topic_id."'>" . $topic->topic_name . "</button></li>";
+                                }
+                                ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-between">
+                <a class="btn btn-secondary" href="?action=home">Back</a>
+
+                <form method="post" action="?action=confirm-create-paper" id="create-paper">
+                    <input type="text" hidden name="title" id="titleInput">
+                    <input type="text" hidden name="abstract" id="abstractInput">
+                    <input type="text" hidden name="conference_name" id="conferenceInput">
+                    <input type="text" hidden name="topic_name" id="topicInput">
+                    <input type="text" hidden name="authorsName" id="authorsNameInput">
+                    <input type="text" hidden name="authorsRole" id="authorsRoleInput">
+                    <input type="text" hidden name="publisher" value="<?php echo $_COOKIE["isLogin"]?>">
+                    <button type="submit" class="btn btn-primary" onclick="handleSubmit()">Submit</button>
+                </form>
+            </div>
+            <div class="text-end">
+                <p id="error" class="text-danger"></p>
+            </div>
+        </div>
+
+    </div>
+</div>
